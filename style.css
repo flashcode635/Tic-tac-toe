@@ -1,0 +1,86 @@
+*{
+    margin:0%;
+    padding: 0%;
+     font-family: Arial, sans-serif;
+}
+
+body{
+    height: 100vh;
+    /* keeps the container in middle column */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* background color */
+
+    background: linear-gradient( #0b1bafec,rgb(53, 4, 150), rgba(125, 11, 129, 0.868));
+
+}
+
+.container{
+
+    /* defines the area */
+    width: 400px;
+    height: 85vh; 
+
+    /* backeround colors amd font styles */
+    background-color: #ececed;
+   
+
+    /* few more refining */
+    border-radius: 3%;
+
+   position: relative;
+    
+}
+
+h1{
+    font-size: 3rem;
+}
+
+h1, .playerinfo{
+     /* header styling - center */
+    display: flex;
+    justify-content: center;
+
+    /* adjusting positon */
+    padding-top: 15px;
+
+}
+
+.playerinfo{
+
+    color:rgb(118, 116, 116);
+    font-weight:bold;
+    font-size: 1.9rem;
+}
+
+.grid{
+    
+    display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 5px;
+  max-width: 300px;
+  margin: 0 auto;
+  background: #333;
+  padding: 5px;
+  border-radius: 10px;
+}
+.cell{
+  height: 90px;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background(0.3s ,ease);
+  border-radius: 5px;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
