@@ -1,63 +1,65 @@
-*{
-    margin:0%;
-    padding: 0%;
-     font-family: Arial, sans-serif;
+
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
 }
 
-body{
-    height: 100vh;
-    /* keeps the container in middle column */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    /* background color */
-
-    background: linear-gradient( #0b1bafec,rgb(53, 4, 150), rgba(125, 11, 129, 0.868));
-
+body {
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.container{
-
-    /* defines the area */
-    width: 400px;
-    height: 85vh; 
-
-    /* backeround colors amd font styles */
-    background-color: #ececed;
-   
-
-    /* few more refining */
-    border-radius: 3%;
-
-   position: relative;
-    
+.container {
+  text-align: center;
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-h1{
-    font-size: 3rem;
+h1 {
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2.5em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-h1, .playerinfo{
-     /* header styling - center */
-    display: flex;
-    justify-content: center;
-
-    /* adjusting positon */
-    padding-top: 15px;
-
+.game-info {
+  margin-bottom: 20px;
 }
 
-.playerinfo{
-
-    color:rgb(118, 116, 116);
-    font-weight:bold;
-    font-size: 1.9rem;
+#status {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 15px;
 }
 
-.grid{
-    
-    display: grid;
+#reset-btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#reset-btn:hover {
+  background: #5a67d8;
+}
+
+.game-board {
+  display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 5px;
   max-width: 300px;
@@ -66,7 +68,9 @@ h1, .playerinfo{
   padding: 5px;
   border-radius: 10px;
 }
-.cell{
+
+.cell {
+  width: 90px;
   height: 90px;
   background: white;
   display: flex;
@@ -75,8 +79,28 @@ h1, .playerinfo{
   font-size: 2em;
   font-weight: bold;
   cursor: pointer;
-  transition: background(0.3s ,ease);
+  transition: background 0.3s ease;
   border-radius: 5px;
+}
+
+.cell:hover {
+  background: #f0f0f0;
+}
+
+.cell.x {
+  color: #e74c3c;
+}
+
+.cell.o {
+  color: #3498db;
+}
+
+.cell.disabled {
+  cursor: not-allowed;
+}
+
+.winner {
+  animation: pulse 1s infinite;
 }
 
 @keyframes pulse {
