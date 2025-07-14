@@ -6,7 +6,11 @@ class TicTacToe {
     this.statusElement = document.getElementById('status');
     this.boardElement = document.getElementById('board');
     this.resetButton = document.getElementById('reset-btn');
-    
+    this.scoreofX = 0;
+    this.scoreofO = 0;
+    this.XScoreElement = document.getElementById('X-score');
+    this.OScoreElement = document.getElementById('O-score');
+
     this.winningConditions = [
       [0, 1, 2],
       [3, 4, 5],
@@ -20,11 +24,42 @@ class TicTacToe {
     
     this.initializeGame();
   }
-  
+  checkResult() {
+    let roundWon = false;
+    let winningCombination = null;
+    
+    for (let i = 0; i < this.winningConditions.length; i++) {
+      const [a, b, c] = this.winningConditions[i];
+      if (this.board[a] && this.board[a] === this.board[b] && this.board[a] === this.board[c]) {
+        roundWon = true;
+        winningCombination = this.winningConditions[i];
+        break;
+      }
+    }
+    
+    if (roundWon) {
+      this.updateScore(); // Add this line to update the score
+      this.updateStatus(`Player ${this.currentPlayer} wins! 🎉`);
+      this.gameActive = false;
+      this.highlightWinningCells(winningCombination);
+      return;
+    }
+    
+    if (!this.board.includes('')) {
+      this.updateStatus("It's a draw! 🤝");
+      this.gameActive = false;
+      return;
+    }
+    
+    this.switchPlayer();
+  }
   initializeGame() {
+    this.scoreofO = 0;
+    this.scoreofX = 0;
     this.boardElement.addEventListener('click', this.handleCellClick.bind(this));
     this.resetButton.addEventListener('click', this.resetGame.bind(this));
     this.updateStatus(`Player ${this.currentPlayer}'s turn`);
+    this.updateScoreDisplay();
   }
   
   handleCellClick(event) {
@@ -60,6 +95,7 @@ class TicTacToe {
     }
     
     if (roundWon) {
+      this.updateScore();
       this.updateStatus(`Player ${this.currentPlayer} wins! 🎉`);
       this.gameActive = false;
       this.highlightWinningCells(winningCombination);
@@ -87,6 +123,20 @@ class TicTacToe {
     this.updateStatus(`Player ${this.currentPlayer}'s turn`);
   }
   
+  updateScoreDisplay() {
+    this.XScoreElement.textContent = ` ${this.scoreofX}`;
+    this.OScoreElement.textContent = ` ${this.scoreofO}`;
+  }
+  
+  updateScore() {
+    if (this.currentPlayer === 'X') {
+      this.scoreofX++;
+    } else {
+      this.scoreofO++;
+    }
+    this.updateScoreDisplay();
+  }
+
   updateStatus(message) {
     this.statusElement.textContent = message;
   }

@@ -9,25 +9,50 @@
 </head>
 
 <body>
-  <div class="container">
-    <h1>Tic Tac Toe</h1>
-    <div class="game-info">
-      <div id="status">Player X's turn</div>
-      <button id="reset-btn">Reset Game</button>
-    </div>
-    <div class="game-board" id="board">
-      <div class="cell" data-index="0"></div>
-      <div class="cell" data-index="1"></div>
-      <div class="cell" data-index="2"></div>
-      <div class="cell" data-index="3"></div>
-      <div class="cell" data-index="4"></div>
-      <div class="cell" data-index="5"></div>
-      <div class="cell" data-index="6"></div>
-      <div class="cell" data-index="7"></div>
-      <div class="cell" data-index="8"></div>
-    </div>
-  </div>
-  
+  <!-- structure -->
+   <div id="body">
+
+     <div class="container">
+       <h1>Tic Tac Toe</h1>
+       <div class="game-info">
+         <div id="status">Player X's turn</div>
+         <button id="reset-btn">Reset Game</button>
+       </div>
+       <div class="game-board" id="board">
+         <div class="cell" data-index="0"></div>
+         <div class="cell" data-index="1"></div>
+         <div class="cell" data-index="2"></div>
+         <div class="cell" data-index="3"></div>
+         <div class="cell" data-index="4"></div>
+         <div class="cell" data-index="5"></div>
+         <div class="cell" data-index="6"></div>
+         <div class="cell" data-index="7"></div>
+         <div class="cell" data-index="8"></div>
+       </div>
+     </div>
+     <!-- leader board -->
+      <div class="board-location">
+        <div style="margin-right: 2%;">
+
+          <div class="score-board">
+            <div style="font-size: 2.3rem;text-align: center;"> Leader Board </div>
+            <div style="width:auto;display: flex;">
+
+              <span style="background-color: rgb(227, 2, 2); height: 3vh; width: 11vw;padding-top: 5px; text-align: center;color: aliceblue;"> player-X  </span>
+              <span style="background-color: rgb(0, 255, 34); height: 3vh; width: 10vw; padding-top: 5px; text-align: center;color: aliceblue;"> player-O  </span>
+            </div>
+
+            <div style="display: flex; width:auto;height:max-content; margin: 0%;padding:0%;">
+                  <div id="X-score"  style="background-color: rgb(227, 2, 2); height: 19vh; width: 11vw; border-bottom-left-radius: 11px;padding-top: 5px; text-align: center;color: aliceblue;"> </div>
+                  <div id="O-score" style="background-color: rgb(0, 255, 34);height: 19vh;width: 10vw; border-bottom-right-radius:11px;padding-top: 5px; text-align: center;color: aliceblue;"> </div>
+    
+            </div>
+          </div>
+        </div>
+      </div>
+
+   </div>
+
   <script src="script.js"></script>
 </body>
 
