@@ -29,11 +29,13 @@ body{
 .container {
   /* margin-top: 70px; */
   text-align: center;
-  background: white;
+  background: rgba(255, 255, 255, 0.779); /* Semi-transparent background */
+  backdrop-filter: blur(40px);           /* Applies blur to the background */
+  -webkit-backdrop-filter: blur(40px);
   border-radius: 15px;
   padding: 30px;
   position: fixed;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.357);
 }
 
 h1 {
@@ -49,6 +51,7 @@ h1 {
   background-color: white;
   border: 1px solid transparent;
   border-radius: 11px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.357);
 }
 .board-location{
   width: 100vw;
