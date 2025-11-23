@@ -1,65 +1,110 @@
-<!DOCTYPE html>
+<!-- Main HTML document for the Tic Tac Toe game -->
 <html>
-
 <head>
+  <!-- Basic meta tags for character encoding and responsive viewport -->
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Game</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe</title>
+
+  <!-- External JavaScript librarie apline -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind CSS configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          // Custom color definitions
+          colors: {
+            'brand-purple': '#764ba2',   'brand-blue': '#667eea','brand-dark': '#333',
+            'player-x': '#4864e3',  // Blue color for Player X
+            'player-o': '#6327fb',  // Purple color for Player O
+          },
+          // Font family settings
+          fontFamily: { sans: ['Arial', 'sans-serif'],   },
+          // Animation keyframes for winning cells
+          keyframes: {
+            'pop': {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.05)' },
+            }
+          },
+          // Animation classes
+          animation: { 'pop': 'pop 1s infinite' },
+        }
+      }
+    }
+  </script>
 </head>
+<!-- Main body with gradient background -->
+<body class="m-0 p-0 h-screen w-screen overflow-hidden bg-gradient-to-br from-[#667eea] via-[#764ba2] to-[#764ba2]">
 
-<body>
-  <!-- structure -->
-   <div id="body">
-
-     <div class="container">
-       <h1 style="color:rgb(59, 1, 134);">Tic Tac Toe</h1>
-       <div class="game-info">
-         <div id="status" style="color: rgb(5, 25, 247);">Player X's turn</div>
-         <button id="reset-btn">Reset Game</button>
-       </div>
-       <div class="game-board" id="board">
-         <div class="cell" data-index="0"></div>
-         <div class="cell" data-index="1"></div>
-         <div class="cell" data-index="2"></div>
-         <div class="cell" data-index="3"></div>
-         <div class="cell" data-index="4"></div>
-         <div class="cell" data-index="5"></div>
-         <div class="cell" data-index="6"></div>
-         <div class="cell" data-index="7"></div>
-         <div class="cell" data-index="8"></div>
-       </div>
-     </div>
-     <!-- leader board -->
-      <div class="board-location">
-        <div style="margin-right: 2%;">
-
-          <div class="score-board">
-            <div style="font-size: 2.3rem;text-align: center; color: rgb(232, 68, 9);"> Leader Board </div>
-            <div style="width:auto;display: flex;">
-
-              <span style="background-color: #4864e3; height: 3vh; width: 11vw;padding: 5px 0px; text-align: center;color: aliceblue;"> player-X  </span>
-              <span style="background-color: #6327fb; height: 3vh; width: 10vw;padding: 5px 0px; text-align: center;color: aliceblue;"> player-O  </span>
-            </div>
-
-            <div style="display: flex; width:auto;height:max-content; margin: 0%;padding:0%;
-  /* background: linear-gradient(to right, #667eea 50% , #764ba2 50%); */
-            ">
-                  <div id="X-score"  style="
-                    background-color: #4864e3;
-                     height: 19vh; width: 11vw; border-bottom-left-radius: 11px;padding-top: 5px; text-align: center;color: aliceblue;"> </div>
-                  <div id="O-score" style="
-                  background-color: #6327fb;height: 19vh;
-                  width: 10vw; border-bottom-right-radius:11px;padding-top: 5px; text-align: center;color: aliceblue;"> </div>
+  <!-- Main game container using Alpine.js for reactivity -->
+  <div x-data="ticTacToe()" class="h-full w-full flex items-center justify-center relative">
     
-            </div>
-          </div>
-        </div>
+    <!-- Game board container -->
+    <div class="z-10 text-center bg-white/80 backdrop-blur-[40px] rounded-2xl p-8 shadow-2xl fixed">
+      
+      <!-- Game title -->
+      <h1 class="text-4xl font-bold text-brand-dark mb-5 mt-0 drop-shadow-sm" style="color:rgb(59, 1, 134);">
+        Tic Tac Toe
+      </h1>
+      
+      <!-- Game status and controls -->
+      <div class="mb-5">
+        <!-- Shows current game status (turn/win/draw) -->
+        <div class="text-2xl font-bold text-gray-600 mb-4" x-text="statusMsg" style="color: rgb(5, 25, 247);"></div>
+        <!-- Reset game button -->
+        <button  @click="resetGame()"   class="bg-brand-blue text-white border-none py-2 px-6 rounded-full text-base cursor-pointer transition hover:bg-indigo-600 focus:outline-none">    Reset Game </button>
       </div>
 
-   </div>
+      <!-- Game grid (3x3) -->
+      <div class="grid grid-cols-3 gap-1.5 max-w-[300px] mx-auto bg-brand-dark p-1.5 rounded-xl">
+        <!-- Loop through each cell in the game board -->
+        <template x-for="(cell, index) in board" :key="index">
+          <div 
+            class="w-[90px] h-[90px] bg-white flex justify-center items-center text-4xl font-bold cursor-pointer rounded transition duration-300 hover:bg-gray-100"
+            @click="makeMove(index)"  // Handle cell click
+            x-text="cell"  // Display X, O, or empty
+            :class="{
+              'text-red-500': cell === 'X',  // Red for X
+              'text-blue-500': cell === 'O', // Blue for O
+              '!bg-green-500 !text-white animate-pop': winningLines.includes(index)  // Highlight winning cells
+            }">
+          </div>
+        </template>
+      </div>
+    </div>
 
+    <!-- Leaderboard panel -->
+    <div class="absolute right-0 h-full flex items-center pr-[2%] pointer-events-none"> 
+      <div class="pointer-events-auto bg-white border border-transparent rounded-xl shadow-2xl max-h-[34vh] w-auto overflow-hidden">
+        
+        <!-- Leaderboard title -->
+        <div class="text-[2.3rem] text-center text-[rgb(232,68,9)] py-2">
+           Leader Board 
+        </div>
+        
+        <!-- Player labels -->
+        <div class="flex w-auto">
+          <span class="bg-player-x h-[5vh] w-[11vw] py-1 text-center text-aliceblue text-white block"> player-X </span>
+          <span class="bg-player-o h-[5vh] w-[10vw] py-1 text-center text-aliceblue text-white block"> player-O </span>
+        </div>
+        
+        <!-- Player scores -->
+        <div class="flex w-auto h-max m-0 p-0">
+          <div x-text="scores.X"   class="bg-player-x h-[15vh] w-[11vw] pt-1 text-center text-white text-3xl flex items-center justify-center"></div>
+          <div x-text="scores.O"    class="bg-player-o h-[15vh] w-[10vw] pt-1 text-center text-white text-3xl flex items-center justify-center"></div>    
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Game logic script -->
   <script src="script.js"></script>
+    
 </body>
-
 </html>
