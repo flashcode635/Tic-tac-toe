@@ -4,7 +4,7 @@
 This project was part of a code optimization challenge to reduce the total lines of code to under 100 (excluding empty lines and comment-only lines, but including lines with both code and comments).
 
 ### Key Metrics
-- **Initial Code Size**: 134 lines
+- **Initial Code Size**: 234 lines
 - **Target**: ≤ 100 lines
 - **Technologies Used**: 
   - HTML5
