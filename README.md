@@ -48,8 +48,8 @@ This project was part of a code optimization challenge to reduce the total lines
 - The UI/UX was preserved while optimizing the codebase
 
 ## 🔍 Files
-- `index.html` - Main game interface and structure
-- `script.js` - Game logic and state management
+- `index.html` - Main game interface and structure , Game logic and state management
+
 
 ## 📊 Performance
 - Fast loading with minimal dependencies

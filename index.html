@@ -1,42 +1,31 @@
-<!-- Main HTML document for the Tic Tac Toe game -->
+<!-- Tic Tac Toe Game - Optimized Single File Implementation -->
 <html>
 <head>
   <!-- Basic meta tags for character encoding and responsive viewport -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tic Tac Toe</title>
+  <title>Tic Tac Toe modified</title>
 
-  <!-- External JavaScript librarie apline -->
+  <!-- External JavaScript libraries -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Tailwind CSS configuration -->
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          // Custom color definitions
-          colors: {
-            'brand-purple': '#764ba2',   'brand-blue': '#667eea','brand-dark': '#333',
-            'player-x': '#4864e3',  // Blue color for Player X
-            'player-o': '#6327fb',  // Purple color for Player O
-          },
-          // Font family settings
-          fontFamily: { sans: ['Arial', 'sans-serif'],   },
-          // Animation keyframes for winning cells
-          keyframes: {
-            'pop': {
-              '0%, 100%': { transform: 'scale(1)' },
-              '50%': { transform: 'scale(1.05)' },
-            }
-          },
-          // Animation classes
-          animation: { 'pop': 'pop 1s infinite' },
-        }
-      }
-    }
+    tailwind.config = { theme: { extend: {
+      // Custom color definitions for game elements
+      colors: { 'mild-blue':'#667eea', 'brand-dark':'#333', 'player-x':'#4864e3', 'player-o':'#6327fb' },
+      // Animation keyframes for winning cell highlighting
+      keyframes: { 
+        'pop': { 
+            '0%, 100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.05)' }
+         } },
+      // Animation class for winning cells
+      animation: { 'pop': 'pop 1s infinite' }
+    }}}
   </script>
 </head>
+
 <!-- Main body with gradient background -->
 <body class="m-0 p-0 h-screen w-screen overflow-hidden bg-gradient-to-br from-[#667eea] via-[#764ba2] to-[#764ba2]">
 
@@ -45,33 +34,24 @@
     
     <!-- Game board container -->
     <div class="z-10 text-center bg-white/80 backdrop-blur-[40px] rounded-2xl p-8 shadow-2xl fixed">
-      
       <!-- Game title -->
-      <h1 class="text-4xl font-bold text-brand-dark mb-5 mt-0 drop-shadow-sm" style="color:rgb(59, 1, 134);">
-        Tic Tac Toe
-      </h1>
+      <h1 class="text-4xl font-bold text-brand-dark mb-5 mt-0 drop-shadow-sm ">Tic Tac Toe</h1>
       
       <!-- Game status and controls -->
       <div class="mb-5">
         <!-- Shows current game status (turn/win/draw) -->
-        <div class="text-2xl font-bold text-gray-600 mb-4" x-text="statusMsg" style="color: rgb(5, 25, 247);"></div>
+        <div class="text-2xl font-bold mb-4 text-[#3B0186]" x-text="msg"></div>
         <!-- Reset game button -->
-        <button  @click="resetGame()"   class="bg-brand-blue text-white border-none py-2 px-6 rounded-full text-base cursor-pointer transition hover:bg-indigo-600 focus:outline-none">    Reset Game </button>
+        <button @click="reset()" class="bg-mild-blue text-white py-2 px-6 rounded-full transition hover:bg-indigo-600">Reset Game</button>
       </div>
 
       <!-- Game grid (3x3) -->
       <div class="grid grid-cols-3 gap-1.5 max-w-[300px] mx-auto bg-brand-dark p-1.5 rounded-xl">
         <!-- Loop through each cell in the game board -->
-        <template x-for="(cell, index) in board" :key="index">
-          <div 
-            class="w-[90px] h-[90px] bg-white flex justify-center items-center text-4xl font-bold cursor-pointer rounded transition duration-300 hover:bg-gray-100"
-            @click="makeMove(index)"  // Handle cell click
-            x-text="cell"  // Display X, O, or empty
-            :class="{
-              'text-red-500': cell === 'X',  // Red for X
-              'text-blue-500': cell === 'O', // Blue for O
-              '!bg-green-500 !text-white animate-pop': winningLines.includes(index)  // Highlight winning cells
-            }">
+        <template x-for="(cell, i) in board" :key="i">
+          <div class="w-[90px] h-[90px] bg-white flex justify-center items-center text-4xl font-bold cursor-pointer rounded hover:bg-gray-100 transition" 
+             @click="move(i)" x-text="cell"
+             :class="{ 'text-player-x': cell==='X', /* Blue X */ 'text-player-o': cell==='O', /* Purple O */ '!bg-green-500 !text-white animate-pop': winLine.includes(i) /* Winner */ }">
           </div>
         </template>
       </div>
@@ -79,32 +59,66 @@
 
     <!-- Leaderboard panel -->
     <div class="absolute right-0 h-full flex items-center pr-[2%] pointer-events-none"> 
-      <div class="pointer-events-auto bg-white border border-transparent rounded-xl shadow-2xl max-h-[34vh] w-auto overflow-hidden">
-        
+      <div class="pointer-events-auto bg-white rounded-xl shadow-2xl overflow-hidden w-[22vw]">
         <!-- Leaderboard title -->
-        <div class="text-[2.3rem] text-center text-[rgb(232,68,9)] py-2">
-           Leader Board 
-        </div>
+        <div class="text-[2.3rem] font-bold text-center text-[#E84409] py-2">Leader Board</div>
         
-        <!-- Player labels -->
-        <div class="flex w-auto">
-          <span class="bg-player-x h-[5vh] w-[11vw] py-1 text-center text-aliceblue text-white block"> player-X </span>
-          <span class="bg-player-o h-[5vh] w-[10vw] py-1 text-center text-aliceblue text-white block"> player-O </span>
+        <!-- Player scores grid -->
+        <div class="grid grid-cols-2 text-center text-white">
+          <!-- Player labels -->
+          <span class="bg-player-x py-1 h-[5vh]">player-X</span>
+          <span class="bg-player-o py-1 h-[5vh]">player-O</span>
+          <!-- Player scores -->
+          <div x-text="scores.X" class="bg-player-x text-3xl h-[15vh] flex items-center justify-center"></div>
+          <div x-text="scores.O" class="bg-player-o text-3xl h-[15vh] flex items-center justify-center"></div>    
         </div>
-        
-        <!-- Player scores -->
-        <div class="flex w-auto h-max m-0 p-0">
-          <div x-text="scores.X"   class="bg-player-x h-[15vh] w-[11vw] pt-1 text-center text-white text-3xl flex items-center justify-center"></div>
-          <div x-text="scores.O"    class="bg-player-o h-[15vh] w-[10vw] pt-1 text-center text-white text-3xl flex items-center justify-center"></div>    
-        </div>
-
       </div>
     </div>
-
   </div>
 
-  <!-- Game logic script -->
-  <script src="script.js"></script>
-    
+  <!-- Game logic implementation -->
+  <script>
+    // Main game function that returns the game state and methods
+    function ticTacToe() {
+      return {
+        // Game state variables
+        board: Array(9).fill(''),    // 3x3 game board array
+        turn: 'X',                   // Current player ('X' or 'O')
+        active: true,                // Whether the game is still being played
+        scores: {X:0, O:0},         // Score tracking for both players
+        msg: "Player X's turn",      // Status message displayed to players
+        winLine: [],                 // Stores the winning line indices when someone wins
+        // All possible winning combinations (rows, columns, diagonals)
+        wins: [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]],
+
+        // Handles a player's move
+        move(i) {
+          if (this.board[i] || !this.active) return; // Guard clause: ignore if cell is taken or game is over
+          this.board[i] = this.turn; // Place the current player's mark on the board
+          
+          // Check for win using array method .find()
+          const win = this.wins.find(w => w.every(idx => this.board[idx] === this.turn));
+          
+          // Handle win condition
+          if (win) {
+            this.active = false; this.msg = `Player ${this.turn} wins! 🎉`; this.winLine = win; this.scores[this.turn]++;
+          } 
+          // Check for draw (no empty cells left)
+          else if (!this.board.includes('')) {
+            this.active = false; this.msg = "It's a draw! 🤝";
+          } 
+          // Switch to the other player's turn
+          else {
+            this.turn = this.turn === 'X' ? 'O' : 'X'; this.msg = `Player ${this.turn}'s turn`;
+          }
+        },
+        
+        // Resets the game board for a new round
+        reset() {
+          this.board.fill(''); this.active = true; this.turn = 'X'; this.msg = "Player X's turn"; this.winLine = [];
+        }
+      }
+    }
+  </script>
 </body>
 </html>
